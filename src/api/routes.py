@@ -19,17 +19,57 @@ CORS(api)
 
 # Create a route to authenticate your users and return JWTs. The
 # create_access_token() function is used to actually generate the JWT.
+
+
 @api.route("/token", methods=["POST"])
 def generate_token():
+
+
     email = request.json.get("email", None)
     password = request.json.get("password", None)
 
+    email = email.lower()
+    user = User.query.filter_by(email = email, password = password).first()
+
     # test that the user exists
-    if email != "test" or password != "test":
+    if user is None:
         return jsonify({"msg": "Bad email or password"}), 401
 
-    access_token = create_access_token(identity=email)
-    return jsonify(access_token=access_token)
+    access_token = create_access_token(identity=user.id)
+    response = {
+        "acces_token": access_token,
+        "user_id": user.id,
+        "msg": f'Welcome {user.email}!'
+    }
+
+    return jsonify(response)
+
+@api.route('/signup', methods=["POST"])
+def register_user():
+
+    email = request.json.get("email", None)
+    password = request.json.get("password", None)
+
+    email = email.lower()
+    user = User.query.filter_by(email=email).first()
+
+    if user is not None and user.email ==email:
+        response = {
+            'msg': 'User already exists'
+        }
+        return jsonify(response), 403
+    
+    user = User()
+    user.email = email
+    user.password = password
+    user.is_active = True
+    db.session.add(user)
+    db.session.commit()
+
+    response = {
+        'msg': f'Congratulations, {user.email}! You have successfully signed up!'
+    }
+    return jsonify(response), 200
 
 
 

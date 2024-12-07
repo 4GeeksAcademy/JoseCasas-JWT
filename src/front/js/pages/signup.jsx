@@ -1,59 +1,46 @@
 import React, { useState, useContext } from 'react';
-import { useNavigate, Link } from "react-router-dom";
-import { Context } from "../store/appContext"
+import { Context } from '../store/appContext';
 
-const Login = () => {
-    const navigate = useNavigate();
-    const { store, actions } =useContext(Context)
+const SignUp = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const { store, actions } = useContext(Context);
 
     const handleClick = () => {
-        actions.login(email, password).then(() => {
-            navigate("/private")
-        })
-    }
+        actions.signUp(email, password)
+    };
 
     return (
         <>
-        <div className="text-center mt-5">
-            {
-                (store.token && store.token != "" && store.token != undefined) 
-                ?
-                <>
-                    <h1> Hello You are logged in! </h1>
-                </>
-                :
-                <>
-                    <h1> Login</h1>
+            <div className="signup">
+                <div>
+                    <h1 className="heading">Sign Up</h1>
                     <div>
                         <input
                             type="text"
                             placeholder="email"
                             value={email}
                             onChange={e => setEmail(e.target.value)}
-                            />
+                        />
                     </div>
                     <div>
-                    <input
+                        <input
                             type="password"
                             placeholder="password"
                             value={password}
                             onChange={e => setPassword(e.target.value)}
-                            />
+                        />
                     </div>
                     <div>
                         <button
                             onClick={handleClick}
-                        >Login
+                        >Sign Up
                         </button>
                     </div>
-                </>
-            }
-        </div>
+                </div>
+            </div>
         </>
     );
-    
 }
 
-export default Login;
+export default SignUp;
