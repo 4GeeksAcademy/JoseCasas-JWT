@@ -1,14 +1,23 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Context } from '../store/appContext';
+import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const { store, actions } = useContext(Context);
+    const navigate = useNavigate();
 
     const handleClick = () => {
         actions.signUp(email, password)
-    };
+    }
+
+    useEffect(() => {
+        if (store.isSignupSuccessful) {
+            navigate('/login')
+        }
+    }, [store.isSignupSuccessful])
+
 
     return (
         <>

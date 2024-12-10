@@ -1,6 +1,7 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate, Link } from "react-router-dom";
 import { Context } from "../store/appContext"
+
 
 const Login = () => {
     const navigate = useNavigate();
@@ -9,10 +10,14 @@ const Login = () => {
     const [password, setPassword] = useState("");
 
     const handleClick = () => {
-        actions.login(email, password).then(() => {
-            navigate("/private")
-        })
+        actions.login(email, password);
     }
+
+    useEffect(() => {
+        if(store.isLoginSuccessful) {
+            navigate('/private')
+        }
+    }, [store.isLoginSuccessful])
 
     return (
         <>

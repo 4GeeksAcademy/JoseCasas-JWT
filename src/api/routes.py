@@ -35,7 +35,8 @@ def generate_token():
     if user is None:
         return jsonify({"msg": "Bad email or password"}), 401
 
-    access_token = create_access_token(identity=user.id)
+    access_token = create_access_token(identity=str(user.id))
+    # sessionStorage.setItem
     response = {
         "acces_token": access_token,
         "user_id": user.id,
@@ -43,6 +44,20 @@ def generate_token():
     }
 
     return jsonify(response)
+
+
+
+
+# @api.route('/private', methods=["GET"])
+# @jwt_required
+# def private():
+#     # Access the identity of the current user with get_jwt_identity
+#     current_user = get_jwt_identity()
+#     return jsonify(logged_in_as=current_user), 200
+
+
+
+
 
 @api.route('/signup', methods=["POST"])
 def register_user():
